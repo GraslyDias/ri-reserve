@@ -14,16 +14,229 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      confirmed_bookings: {
+        Row: {
+          booking_date: string
+          booking_time: string
+          created_at: string
+          customer_name: string
+          id: string
+          inquiry_id: string | null
+          max_capacity: number
+          package_id: string | null
+          package_name: string
+          package_type: Database["public"]["Enums"]["package_type"]
+          participants: number
+          status: string
+        }
+        Insert: {
+          booking_date: string
+          booking_time: string
+          created_at?: string
+          customer_name: string
+          id?: string
+          inquiry_id?: string | null
+          max_capacity?: number
+          package_id?: string | null
+          package_name: string
+          package_type: Database["public"]["Enums"]["package_type"]
+          participants?: number
+          status?: string
+        }
+        Update: {
+          booking_date?: string
+          booking_time?: string
+          created_at?: string
+          customer_name?: string
+          id?: string
+          inquiry_id?: string | null
+          max_capacity?: number
+          package_id?: string | null
+          package_name?: string
+          package_type?: Database["public"]["Enums"]["package_type"]
+          participants?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "confirmed_bookings_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "confirmed_bookings_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inquiries: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          customer_name: string
+          email: string | null
+          id: string
+          package_id: string | null
+          package_name: string
+          package_type: Database["public"]["Enums"]["package_type"]
+          participants: number
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          phone: string
+          preferred_date: string
+          preferred_time: string
+          special_requirements: string | null
+          status: Database["public"]["Enums"]["inquiry_status"]
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          customer_name: string
+          email?: string | null
+          id?: string
+          package_id?: string | null
+          package_name: string
+          package_type?: Database["public"]["Enums"]["package_type"]
+          participants?: number
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          phone: string
+          preferred_date: string
+          preferred_time: string
+          special_requirements?: string | null
+          status?: Database["public"]["Enums"]["inquiry_status"]
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          customer_name?: string
+          email?: string | null
+          id?: string
+          package_id?: string | null
+          package_name?: string
+          package_type?: Database["public"]["Enums"]["package_type"]
+          participants?: number
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          phone?: string
+          preferred_date?: string
+          preferred_time?: string
+          special_requirements?: string | null
+          status?: Database["public"]["Enums"]["inquiry_status"]
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inquiries_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      packages: {
+        Row: {
+          benefits: string[]
+          category: Database["public"]["Enums"]["package_category"]
+          created_at: string
+          description: string
+          discount_percent: number | null
+          display_order: number
+          duration_minutes: number
+          id: string
+          is_active: boolean
+          max_capacity: number | null
+          name: string
+          price_lkr: number | null
+          type: Database["public"]["Enums"]["package_type"]
+        }
+        Insert: {
+          benefits?: string[]
+          category: Database["public"]["Enums"]["package_category"]
+          created_at?: string
+          description: string
+          discount_percent?: number | null
+          display_order?: number
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          max_capacity?: number | null
+          name: string
+          price_lkr?: number | null
+          type?: Database["public"]["Enums"]["package_type"]
+        }
+        Update: {
+          benefits?: string[]
+          category?: Database["public"]["Enums"]["package_category"]
+          created_at?: string
+          description?: string
+          discount_percent?: number | null
+          display_order?: number
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          max_capacity?: number | null
+          name?: string
+          price_lkr?: number | null
+          type?: Database["public"]["Enums"]["package_type"]
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      inquiry_status:
+        | "new"
+        | "contacted"
+        | "payment_pending"
+        | "payment_received"
+        | "confirmed"
+        | "completed"
+        | "cancelled"
+      package_category: "yoga" | "massage" | "counselling" | "therapy" | "mixed"
+      package_type: "individual" | "group"
+      payment_method: "no_payment" | "bank_transfer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +363,20 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      inquiry_status: [
+        "new",
+        "contacted",
+        "payment_pending",
+        "payment_received",
+        "confirmed",
+        "completed",
+        "cancelled",
+      ],
+      package_category: ["yoga", "massage", "counselling", "therapy", "mixed"],
+      package_type: ["individual", "group"],
+      payment_method: ["no_payment", "bank_transfer"],
+    },
   },
 } as const
